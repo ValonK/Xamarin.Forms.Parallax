@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
+using PanCardView;
+using PanCardView.EventArgs;
 using Xamarin.Essentials;
 using Xamarin.Forms.Parallax.ViewModels;
 
@@ -7,6 +8,10 @@ namespace Xamarin.Forms.Parallax.Pages
 {
     public partial class MainPage
     {
+        private Image _currentImage;
+        private float _previousXReading;
+        private const int AnimationLength = 80;
+        
         public MainPage()
         {
             InitializeComponent();
@@ -24,32 +29,47 @@ namespace Xamarin.Forms.Parallax.Pages
                 ToggleOrientationSensor();
             }
         }
-        
-        public void ToggleOrientationSensor()
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            ToggleOrientationSensor();
+            OrientationSensor.ReadingChanged -= OrientationSensorOnReadingChanged;
+        }
+
+        private static void ToggleOrientationSensor()
         {
             try
             {
                 if (OrientationSensor.IsMonitoring)
+                {
                     OrientationSensor.Stop();
+                }
                 else
+                {
                     OrientationSensor.Start(SensorSpeed.UI);
+                }
             }
-            catch (FeatureNotSupportedException fnsEx)
+            catch (FeatureNotSupportedException)
             {
-                // Feature not supported on device
+                Application.Current.MainPage.DisplayAlert("Error", "Orientation Sensor not supported", "Cancel");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Other error has occurred.
+                Application.Current.MainPage.DisplayAlert("Error", "Something went wrong", "Cancel");
             }
         }
         
         private async void OrientationSensorOnReadingChanged(object sender, OrientationSensorChangedEventArgs e)
         {
-            var reading = e.Reading;
-            var image = GetCurrentBackgroundImage();
-            var x = reading.Orientation.X * 60;
-            await image.TranslateTo(x, 0, 50);
+            var xReading = e.Reading.Orientation.X;
+            
+            if (Math.Abs(_previousXReading - xReading) <= Math.Pow(10.0, -2)) return;
+            
+            _currentImage ??= GetCurrentBackgroundImage();
+
+            await _currentImage.TranslateTo(xReading * 130, 0, AnimationLength);
+            _previousXReading = xReading;
         }
         
         private Image GetCurrentBackgroundImage()
@@ -57,5 +77,7 @@ namespace Xamarin.Forms.Parallax.Pages
             if (CarouselView.CurrentView is not ContentView {Content: Frame {Content: Grid grid}}) return null;
             return grid.Children[0] as Image;
         }
+
+        private void CarouselView_OnItemSwiped(CardsView view, ItemSwipedEventArgs args) => _currentImage = null;
     }
 }

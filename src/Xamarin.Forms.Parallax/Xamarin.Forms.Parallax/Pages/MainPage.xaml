@@ -8,6 +8,19 @@
              xmlns:controls="clr-namespace:PanCardView.Controls;assembly=PanCardView"
              x:Class="Xamarin.Forms.Parallax.Pages.MainPage"
              BackgroundColor="#3f37c9">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.BindingContext>
         <viewModels:MainViewModel />
     </ContentPage.BindingContext>
@@ -20,25 +33,20 @@
               Margin="0,0,0,-80"
               VerticalOptions="Center"
               HorizontalOptions="Center">
-            <Label FontAttributes="Bold"
-                   TextColor="White"
+            
+            <Label Style="{StaticResource LabelStyle}"
                    Grid.Row="0"
-                   FontSize="18"
-                   HorizontalTextAlignment="Center"
-                   VerticalTextAlignment="Center"
                    Text="https://github.com/ValonK"/>
-            <Label FontAttributes="Bold"
-                   FontSize="18"
-                   TextColor="White"
+            <Label Style="{StaticResource LabelStyle}"
                    Grid.Row="1"
-                   HorizontalTextAlignment="Center"
                    Text="https://twitter.com/vkcodez"/>
         </Grid>
         
         <panCardView:CarouselView
             Grid.Row="1"
             x:Name="CarouselView"
-            ItemsSource="{Binding Items}">
+            ItemsSource="{Binding Items}"
+             ItemSwiped="CarouselView_OnItemSwiped">
 
             <x:Arguments>
                 <processors:CarouselProcessor />
@@ -55,13 +63,10 @@
                             Padding="0"
                             IsClippedToBounds="true"
                             CornerRadius="10">
-
                             <Grid>
                                 <Image Source="{Binding BackgroundImage}"
                                        Aspect="Fill"
-                                       Margin="-200, -200, -200, 0"
-                                       WidthRequest="2000"/> 
-                                
+                                       Margin="-200, -200, -200, 0"/> 
                                 <Image Source="{Binding Image}" 
                                        Aspect="AspectFill"/>
                             </Grid>

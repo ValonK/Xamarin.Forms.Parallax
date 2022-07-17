@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Xamarin.Forms.Parallax.Models;
 
 namespace Xamarin.Forms.Parallax.ViewModels
@@ -16,7 +15,7 @@ namespace Xamarin.Forms.Parallax.ViewModels
 
         private void CreateItems()
         {
-            Items = new ObservableCollection<ParallaxItem>
+            Items = new()
             {
                 new()
                 {
@@ -39,7 +38,6 @@ namespace Xamarin.Forms.Parallax.ViewModels
             };
 
             OnPropertyChanged(nameof(Items));
-            
         }
     }
 }
