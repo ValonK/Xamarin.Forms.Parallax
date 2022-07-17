@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Xamarin.Forms.Parallax.ViewModels;assembly=Xamarin.Forms.Parallax"
+             xmlns:panCardView="clr-namespace:PanCardView;assembly=PanCardView"
+             xmlns:processors="clr-namespace:PanCardView.Processors;assembly=PanCardView"
+             xmlns:controls="clr-namespace:PanCardView.Controls;assembly=PanCardView"
+             x:Class="Xamarin.Forms.Parallax.Pages.MainPage"
+             BackgroundColor="#3f37c9">
+    <ContentPage.BindingContext>
+        <viewModels:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="0.1*, *">
+        
+        <Grid RowDefinitions="*,*"
+              Grid.Row="0"
+              RowSpacing="20"
+              Margin="0,0,0,-80"
+              VerticalOptions="Center"
+              HorizontalOptions="Center">
+            <Label FontAttributes="Bold"
+                   TextColor="White"
+                   Grid.Row="0"
+                   FontSize="18"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   Text="https://github.com/ValonK"/>
+            <Label FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="White"
+                   Grid.Row="1"
+                   HorizontalTextAlignment="Center"
+                   Text="https://twitter.com/vkcodez"/>
+        </Grid>
+        
+        <panCardView:CarouselView
+            Grid.Row="1"
+            x:Name="CarouselView"
+            ItemsSource="{Binding Items}">
+
+            <x:Arguments>
+                <processors:CarouselProcessor />
+            </x:Arguments>
+
+            <panCardView:CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <ContentView>
+                        <Frame
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            HeightRequest="650"
+                            WidthRequest="350"
+                            Padding="0"
+                            IsClippedToBounds="true"
+                            CornerRadius="10">
+
+                            <Grid>
+                                <Image Source="{Binding BackgroundImage}"
+                                       Aspect="Fill"
+                                       Margin="-200, -200, -200, 0"
+                                       WidthRequest="2000"/> 
+                                
+                                <Image Source="{Binding Image}" 
+                                       Aspect="AspectFill"/>
+                            </Grid>
+                           
+                        </Frame>
+                    </ContentView>
+                </DataTemplate>
+            </panCardView:CarouselView.ItemTemplate>
+
+            <controls:IndicatorsControl Margin="0,0,0,60"/>
+        </panCardView:CarouselView>
+    </Grid>
+</ContentPage>
