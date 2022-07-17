@@ -68,7 +68,7 @@ namespace Xamarin.Forms.Parallax.Pages
             
             _currentImage ??= GetCurrentBackgroundImage();
 
-            await _currentImage.TranslateTo(xReading * 130, 0, AnimationLength);
+            await _currentImage.TranslateTo(xReading * 150, 0, AnimationLength);
             _previousXReading = xReading;
         }
         
